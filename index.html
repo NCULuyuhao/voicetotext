@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>語音辨識網頁</title>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>語音辨識網頁</h1>
+        <button id="startButton">開始說話</button>
+        <br><br>
+        <textarea id="result" rows="5" cols="50" placeholder="辨識結果將會顯示在這裡"></textarea>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const resultTextarea = document.getElementById('result');
+        
+       
+      
+        
+
+        // 檢查瀏覽器是否支援語音辨識功能
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+
+            // 設定語言為繁體中文
+            recognition.lang = 'zh-TW';
+
+            // 當語音辨識開始時觸發
+            recognition.onstart = function() {
+                resultTextarea.value = '';
+                resultTextarea.placeholder = '正在辨識中...';
+            };
+
+            // 當語音辨識結束時觸發
+            recognition.onresult = function(event) {
+            const result = event.results[0][0].transcript;
+             resultTextarea.value = result;
+
+            // 播放語音
+            speakText(result);
+            };
+
+            // 當點擊開始錄音按鈕時觸發
+            startButton.addEventListener('click', function() {
+                recognition.start();
+            });
+
+            // 當點擊暫停說話按鈕時觸發
+            pauseButton.addEventListener('click', function() {
+                togglePause();
+            });
+
+        } 
+            else {
+            startButton.disabled = true;
+            resultTextarea.value = '抱歉，您的瀏覽器不支援語音辨識功能。';
+        }
+        // 播放語音函數
+        function speakText(text) {
+         // 建立語音合成的設定
+         const utterance = new SpeechSynthesisUtterance(text);
+         utterance.lang = 'zh-TW';
+
+            // 播放語音
+            speechSynthesis.speak(utterance);
+        }
+
+        
+    </script>
+</body>
+</html>
